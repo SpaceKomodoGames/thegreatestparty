@@ -1,805 +1,1183 @@
 var deck = {
-  cards: [{
-      id: 1,
-      suit: 'Land',
-      name: 'Mountain',
-      strength: 9,
-      bonus: '+50 with both <span class="weather">Smoke</span> and <span class="flame">Wildfire</span>. <br />CLEARS the Penalty on all <span class="flood">Floods</span>.',
-      penalty: null,
-      bonusScore: function(hand) {
-        return hand.contains('Smoke') && hand.contains('Wildfire') ? 50 : 0;
-      },
-      clearsPenalty: function(card) {
-        return card.suit === 'Flood';
-      },
-      relatedSuits: ['Flood'],
-      relatedCards: ['Smoke', 'Wildfire']
+  cards: 
+[
+    {
+        "id": 1,
+        "name": "Athena",
+        "universe": "Olympians",
+        "specialty": "Games",
+        "fun": 24,
+        "hire": true,
+        "effect1": "Trend: +50 if Jungle Runner is in another Party",
+        "effect1IsHire": false,
+        "effect1IsTrend": true,
+        effect1Score: function(hand) {return this.effect1IsTrendActive ? 50 : 0;},
+        "effect2": "Hire: +20 if invited from Popular",
+        "effect2IsHire": true,
+        "effect2IsTrend": false,
+        effect2Score: function(hand) {return this.effect2IsHireActive ? 20 : 0;},
+        "description": "Goddess of wisdom, hosts an epic bow hunting."
     },
     {
-      id: 2,
-      suit: 'Land',
-      name: 'Cavern',
-      strength: 6,
-      bonus: '+25 with <span class="army">Dwarvish Infantry</span> or <span class="beast">Dragon</span>. <br />CLEARS the Penalty on all <span class="weather">Weather</span>.',
-      penalty: null,
-      bonusScore: function(hand) {
-        return hand.contains('Dwarvish Infantry') || hand.contains('Dragon') ? 25 : 0;
-      },
-      clearsPenalty: function(card) {
-        return card.suit === 'Weather';
-      },
-      relatedSuits: ['Weather'],
-      relatedCards: ['Dwarvish Infantry', 'Dragon']
+        "id": 2,
+        "name": "Hera",
+        "universe": "Olympians",
+        "specialty": "Storytellers",
+        "fun": 55,
+        "hire": true,
+        "effect1": "Clash: -30 with other Olympians",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return hand.containsUniverseExcluding('Olympians', this.id) ? -30 : 0;},
+        "effect2": "Hire: +20 if invited from Popular",
+        "effect2IsHire": true,
+        "effect2IsTrend": false,
+        effect2Score: function(hand) {return this.effect2IsHireActive ? 20 : 0;},
+        "description": "The queen of gods, overseeing divine matters"
     },
     {
-      id: 3,
-      suit: 'Land',
-      name: 'Bell Tower',
-      strength: 8,
-      bonus: '+15 with any one <span class="wizard">Wizard</span>.',
-      penalty: null,
-      bonusScore: function(hand) {
-        return hand.containsSuit('Wizard') ? 15 : 0;
-      },
-      relatedSuits: ['Wizard'],
-      relatedCards: []
+        "id": 3,
+        "name": "Aphrodite",
+        "universe": "Olympians",
+        "specialty": "Fashion",
+        "fun": 47,
+        "hire": true,
+        "effect1": "Clash: -20 with other Fashion",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return hand.containsSpecialtyExcluding('Fashion', this.id) ? -20 : 0;},
+        "effect2": "Hire: +20 if invited with 43 or less Money",
+        "effect2IsHire": true,
+        "effect2IsTrend": false,
+        effect2Score: function(hand) {return this.effect2IsHireActive ? 20 : 0;},
+        "description": "Goddess of beauty and love, inspires stunning fashion and charm."
     },
     {
-      id: 4,
-      suit: 'Land',
-      name: 'Forest',
-      strength: 7,
-      bonus: '+12 for each <span class="beast">Beast</span> and <span class="army">Elven Archers</span>.',
-      penalty: null,
-      bonusScore: function(hand) {
-        return 12 * hand.countSuit('Beast') + (hand.contains('Elven Archers') ? 12 : 0);
-      },
-      relatedSuits: ['Beast'],
-      relatedCards: ['Elven Archers']
+        "id": 4,
+        "name": "Clockwork Magician",
+        "universe": "Gearwrights",
+        "specialty": "Performers",
+        "fun": -1,
+        "hire": true,
+        "effect1": "Spark: +50 with Acrobatic Monkeys",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return hand.contains('Acrobatic Monkeys') ? 50 : 0;},
+        "effect2": "Hire: +20 if invited with 43 or less Money",
+        "effect2IsHire": true,
+        "effect2IsTrend": false,
+        effect2Score: function(hand) {return this.effect2IsHireActive ? 20 : 0;},
+        "description": "A magician who uses mechanical devices to perform tricks."
     },
     {
-      id: 5,
-      suit: 'Land',
-      name: 'Earth Elemental',
-      strength: 4,
-      bonus: '+15 for each other <span class="land">Land</span>.',
-      penalty: null,
-      bonusScore: function(hand) {
-        return 15 * hand.countSuitExcluding('Land', this.id);
-      },
-      relatedSuits: ['Land'],
-      relatedCards: []
+        "id": 5,
+        "name": "Berry Nectarist",
+        "universe": "Mystic Grove",
+        "specialty": "Food and Drinks",
+        "fun": 31,
+        "hire": true,
+        "effect1": "Spark: +25 with Dionysus or Spicemaster",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return hand.contains('Dionysus') || hand.contains('Spicemaster') ? 25 : 0;},
+        "effect2": "Hire: +20 if invited from Obscurity",
+        "effect2IsHire": true,
+        "effect2IsTrend": false,
+        effect2Score: function(hand) {return this.effect2IsHireActive ? 20 : 0;},
+        "description": "A mystical brewer known for her magical elixirs."
     },
     {
-      id: 6,
-      suit: 'Flood',
-      name: 'Fountain of Life',
-      strength: 1,
-      bonus: 'Add the base strength of any one <span class="weapon">Weapon</span>, <span class="flood">Flood</span>, <span class="flame">Flame</span>, <span class="land">Land</span> or <span class="weather">Weather</span> in your hand.',
-      penalty: null,
-      bonusScore: function(hand) {
-        var max = 0;
-        for (const card of hand.nonBlankedCards()) {
-          if (card.suit === 'Weapon' || card.suit === 'Flood' || card.suit === 'Flame' || card.suit === 'Land' || card.suit === 'Weather') {
-            if (card.strength > max) {
-              max = card.strength;
-            }
-          }
-        }
-        return max;
-      },
-      relatedSuits: ['Weapon', 'Flood', 'Flame', 'Land', 'Weather'],
-      relatedCards: []
+        "id": 6,
+        "name": "Beastmaster",
+        "universe": "Mystic Grove",
+        "specialty": "Spectacle",
+        "fun": 2,
+        "hire": true,
+        "effect1": "Spark: +70 with Magizoologist",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return hand.contains('Magizoologist') ? 70 : 0;},
+        "effect2": "Hire: +20 if invited with 43 or less Money",
+        "effect2IsHire": true,
+        "effect2IsTrend": false,
+        effect2Score: function(hand) {return this.effect2IsHireActive ? 20 : 0;},
+        "description": "Showcases mythical creatures from the forest."
     },
     {
-      id: 7,
-      suit: 'Flood',
-      name: 'Swamp',
-      strength: 18,
-      bonus: null,
-      penalty: '-3 for each <span class="army">Army</span> and <span class="flame">Flame</span>.',
-      penaltyScore: function(hand) {
-        var penaltyCards = hand.countSuit('Flame');
-        if (!(hand.containsId(25) || hand.containsId(41))) { // these clear the word 'Army' from the penalty
-          penaltyCards += hand.countSuit('Army');
-        }
-        return -3 * penaltyCards;
-      },
-      relatedSuits: ['Army', 'Flame'],
-      relatedCards: []
+        "id": 7,
+        "name": "Space Band",
+        "universe": "Interstellar Council",
+        "specialty": "Musicians",
+        "fun": -3,
+        "hire": true,
+        "effect1": "Hire: +88 if invited with Money amount that contains \"6\"",
+        "effect1IsHire": true,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return this.effect1IsHireActive ? 88 : 0;},
+        "effect2": "Hire: Exposed in front of you and cannot be discarded.",
+        "effect2IsHire": false,
+        "effect2IsTrend": false,
+        "description": "Blends cosmic sounds into lively performances."
     },
     {
-      id: 8,
-      suit: 'Flood',
-      name: 'Great Flood',
-      strength: 32,
-      bonus: null,
-      penalty: 'BLANKS all <span class="army">Armies</span>, all <span class="land">Lands</span> except <span class="land">Mountain</span>, and all <span class="flame">Flames</span> except <span class="flame">Lightning</span>.',
-      blanks: function(card, hand) {
-        return (card.suit === 'Army' && !(hand.containsId(25) || hand.containsId(41))) || // these clear the word 'Army' from the penalty
-          (card.suit === 'Land' && card.name !== 'Mountain') ||
-          (card.suit === 'Flame' && card.name !== 'Lightning');
-      },
-      relatedSuits: ['Army', 'Land', 'Flame'],
-      relatedCards: ['Mountain', 'Lightning']
+        "id": 8,
+        "name": "Galactic Illusionist",
+        "universe": "Interstellar Council",
+        "specialty": "Performers",
+        "fun": -6,
+        "hire": true,
+        "effect1": "Spark: +50 with Astro-Armorer",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return hand.contains('Astro-Armorer') ? 50 : 0;},
+        "effect2": "Hire: +20 if invited with 43 or less Money",
+        "effect2IsHire": true,
+        "effect2IsTrend": false,
+        effect2Score: function(hand) {return this.effect2IsHireActive ? 20 : 0;},
+        "description": "Conjures ethereal scenes that dazzle and disorient."
     },
     {
-      id: 9,
-      suit: 'Flood',
-      name: 'Island',
-      strength: 14,
-      bonus: 'CLEARS the Penalty on any one <span class="flood">Flood</span> or <span class="flame">Flame</span>.',
-      penalty: null,
-      action: 'Pick a Flood or Flame from your hand to clear.',
-      relatedSuits: ['Flood', 'Flame'],
-      relatedCards: []
+        "id": 9,
+        "name": "Dragon Dancers",
+        "universe": "Heavenly Empire",
+        "specialty": "Performers",
+        "fun": -5,
+        "hire": true,
+        "effect1": "Spark: +75 with Imperial Fireworks",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return hand.contains('Imperial Fireworks') ? 75 : 0;},
+        "effect2": "Hire: +20 if invited with 43 or less Money",
+        "effect2IsHire": true,
+        "effect2IsTrend": false,
+        effect2Score: function(hand) {return this.effect2IsHireActive ? 20 : 0;},
+        "description": "Lead a mystical dragon dance that mesmerizes the kingdom."
     },
     {
-      id: 10,
-      suit: 'Flood',
-      name: 'Water Elemental',
-      strength: 4,
-      bonus: '+15 for each other <span class="flood">Flood</span>.',
-      penalty: null,
-      bonusScore: function(hand) {
-        return 15 * hand.countSuitExcluding('Flood', this.id);
-      },
-      relatedSuits: ['Flood'],
-      relatedCards: []
+        "id": 10,
+        "name": "Silksmiths",
+        "universe": "Heavenly Empire",
+        "specialty": "Fashion",
+        "fun": 37,
+        "hire": true,
+        "effect1": "Clash: -20 with other Fashion",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return hand.containsSpecialtyExcluding('Fashion', this.id) ? -20 : 0;},
+        "effect2": "Hire: +20 if invited with 43 or less Money",
+        "effect2IsHire": true,
+        "effect2IsTrend": false,
+        effect2Score: function(hand) {return this.effect2IsHireActive ? 20 : 0;},
+        "description": "Designs silk robes that symbolize power and grace."
     },
     {
-      id: 11,
-      suit: 'Weather',
-      name: 'Rainstorm',
-      strength: 8,
-      bonus: '+10 for each <span class="flood">Flood</span>.',
-      penalty: 'BLANKS all <span class="flame">Flames</span> except <span class="flame">Lightning</span>.',
-      bonusScore: function(hand) {
-        return 10 * hand.countSuit('Flood');
-      },
-      blanks: function(card, hand) {
-        return card.suit === 'Flame' && card.name !== 'Lightning';
-      },
-      relatedSuits: ['Flood', 'Flame'],
-      relatedCards: ['Lightning']
+        "id": 11,
+        "name": "Seafood Maestro",
+        "universe": "Atlantis",
+        "specialty": "Food and Drinks",
+        "fun": 3,
+        "hire": true,
+        "effect1": "Hire: +82 if invited with Money amount that contains \"3\"",
+        "effect1IsHire": true,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return this.effect1IsHireActive ? 82 : 0;},
+        "effect2": "Hire: Exposed in front of you and cannot be discarded.",
+        "effect2IsHire": false,
+        "effect2IsTrend": false,
+        "description": "Serve culinary masterpieces with exotic, deep-sea ingredients."
     },
     {
-      id: 12,
-      suit: 'Weather',
-      name: 'Blizzard',
-      strength: 30,
-      bonus: null,
-      penalty: 'BLANKS all <span class="flood">Floods</span>. <br />-5 for each <span class="army">Army</span>, <span class="leader">Leader</span>, <span class="beast">Beast</span>, and <span class="flame">Flame</span>.',
-      penaltyScore: function(hand) {
-        var penaltyCards = hand.countSuit('Leader') + hand.countSuit('Beast') + hand.countSuit('Flame');
-        if (!hand.containsId(25)) { // clears the word 'Army' from the penalty
-          penaltyCards += hand.countSuit('Army');
-        }
-        return -5 * penaltyCards;
-      },
-      blanks: function(card, hand) {
-        return card.suit === 'Flood';
-      },
-      relatedSuits: ['Leader', 'Beast', 'Flame', 'Army', 'Flood'],
-      relatedCards: []
+        "id": 12,
+        "name": "Seawear Designer",
+        "universe": "Atlantis",
+        "specialty": "Fashion",
+        "fun": -7,
+        "hire": true,
+        "effect1": "Spark: +30 with any Spectacle",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return hand.containsSpecialty('Spectacle') ? 30 : 0;},
+        "effect2": "Hire: +20 if invited from Popular",
+        "effect2IsHire": true,
+        "effect2IsTrend": false,
+        effect2Score: function(hand) {return this.effect2IsHireActive ? 20 : 0;},
+        "description": "Designs flowing garments that suits the vibrant oceanic life."
     },
     {
-      id: 13,
-      suit: 'Weather',
-      name: 'Smoke',
-      strength: 27,
-      bonus: null,
-      penalty: 'This card is BLANKED unless with at least one <span class="flame">Flame</span>.',
-      blankedIf: function(hand) {
-        return !hand.containsSuit('Flame');
-      },
-      relatedSuits: ['Flame'],
-      relatedCards: []
+        "id": 13,
+        "name": "Spirit Sonata",
+        "universe": "Hexward",
+        "specialty": "Musicians",
+        "fun": -2,
+        "hire": true,
+        "effect1": "Spark: +11 for each other Musicians",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return 11 * hand.containsSpecialtyExcluding('Musicians', this.id);},
+        "effect2": "Hire: +20 if invited from Popular",
+        "effect2IsHire": true,
+        "effect2IsTrend": false,
+        effect2Score: function(hand) {return this.effect2IsHireActive ? 20 : 0;},
+        "description": "Plays enchanting tunes, weaving magic through sound and song."
     },
     {
-      id: 14,
-      suit: 'Weather',
-      name: 'Whirlwind',
-      strength: 13,
-      bonus: '+40 with <span class="weather">Rainstorm</span> and either <span class="weather">Blizzard</span> or <span class="flood">Great Flood</span>.',
-      penalty: null,
-      bonusScore: function(hand) {
-        return hand.contains('Rainstorm') && (hand.contains('Blizzard') || hand.contains('Great Flood')) ? 40 : 0;
-      },
-      relatedSuits: ['Rainstorm'],
-      relatedCards: ['Blizzard', 'Great Flood']
+        "id": 14,
+        "name": "Pyrotechnic Professors",
+        "universe": "Hexward",
+        "specialty": "Spectacle",
+        "fun": 6,
+        "hire": true,
+        "effect1": "Spark: +30 with any Interstellar Council",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return hand.containsUniverse('Interstellar Council') ? 30 : 0;},
+        "effect2": "Hire: +20 if invited with 43 or less Money",
+        "effect2IsHire": true,
+        "effect2IsTrend": false,
+        effect2Score: function(hand) {return this.effect2IsHireActive ? 20 : 0;},
+        "description": "Specializes in magical fireworks that dazzle the sky."
     },
     {
-      id: 15,
-      suit: 'Weather',
-      name: 'Air Elemental',
-      strength: 4,
-      bonus: '+15 for each other <span class="weather">Weather</span>.',
-      penalty: null,
-      bonusScore: function(hand) {
-        return 15 * hand.countSuitExcluding('Weather', this.id);
-      },
-      relatedSuits: ['Weather'],
-      relatedCards: []
+        "id": 15,
+        "name": "Magic Wardrober",
+        "universe": "Hexward",
+        "specialty": "Fashion",
+        "fun": -5,
+        "hire": true,
+        "effect1": "Hire: +90 if invited with Money amount that contains \"5\"",
+        "effect1IsHire": true,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return this.effect1IsHireActive ? 90 : 0;},
+        "effect2": "Hire: Exposed in front of you and cannot be discarded.",
+        "effect2IsHire": false,
+        "effect2IsTrend": false,
+        "description": "Designs robes that adjust to the wearer’s magical needs."
     },
     {
-      id: 16,
-      suit: 'Flame',
-      name: 'Wildfire',
-      strength: 40,
-      bonus: null,
-      penalty: 'BLANKS all cards except <span class="flame">Flames</span>, <span class="wizard">Wizards</span>, <span class="weather">Weather</span>, <span class="weapon">Weapons</span>, <span class="artifact">Artifacts</span>, <span class="land">Mountain</span>, <span class="flood">Great Flood</span>, <span class="flood">Island</span>, <span class="beast">Unicorn</span> and <span class="beast">Dragon</span>.',
-      blanks: function(card, hand) {
-        return !(card.suit === 'Flame' || card.suit === 'Wizard' || card.suit === 'Weather' ||
-          card.suit === 'Weapon' || card.suit === 'Artifact' || card.suit === 'Wild' || card.name === 'Mountain' ||
-          card.name === 'Great Flood' || card.name === 'Island' || card.name === 'Unicorn' || card.name === 'Dragon');
-      },
-      relatedSuits: allSuits(),
-      relatedCards: ['Mountain', 'Great Flood', 'Island', 'Unicorn', 'Dragon']
+        "id": 16,
+        "name": "Pencak Silat",
+        "universe": "Nusantara",
+        "specialty": "Performers",
+        "fun": 4,
+        "hire": true,
+        "effect1": "Hire: +81 if invited with Money amount that contains \"4\"",
+        "effect1IsHire": true,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return this.effect1IsHireActive ? 81 : 0;},
+        "effect2": "Hire: Exposed in front of you and cannot be discarded.",
+        "effect2IsHire": false,
+        "effect2IsTrend": false,
+        "description": "Martial arts performance that blends fluid and powerful motions."
     },
     {
-      id: 17,
-      suit: 'Flame',
-      name: 'Candle',
-      strength: 2,
-      bonus: '+100 with <span class="artifact">Book of Changes</span>, <span class="land">Bell Tower</span>, and any one <span class="wizard">Wizard</span>.',
-      penalty: null,
-      bonusScore: function(hand) {
-        return hand.contains('Book of Changes') && hand.contains('Bell Tower') && hand.containsSuit('Wizard') ? 100 : 0;
-      },
-      relatedSuits: ['Wizard'],
-      relatedCards: ['Book of Changes', 'Bell Tower']
+        "id": 17,
+        "name": "Songket Seamstress",
+        "universe": "Nusantara",
+        "specialty": "Fashion",
+        "fun": 19,
+        "hire": true,
+        "effect1": "Spark: +45 with Gatotkaca",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return hand.contains('Gatotkaca') ? 45 : 0;},
+        "effect2": "Hire: +20 if invited with 43 or less Money",
+        "effect2IsHire": true,
+        "effect2IsTrend": false,
+        effect2Score: function(hand) {return this.effect2IsHireActive ? 20 : 0;},
+        "description": "Crafts songket clothings that glint with historical threads"
     },
     {
-      id: 18,
-      suit: 'Flame',
-      name: 'Forge',
-      strength: 9,
-      bonus: '+9 for each <span class="weapon">Weapon</span> and <span class="artifact">Artifact</span>.',
-      penalty: null,
-      bonusScore: function(hand) {
-        return 9 * (hand.countSuit('Weapon') + hand.countSuit('Artifact'));
-      },
-      relatedSuits: ['Weapon', 'Artifact'],
-      relatedCards: []
+        "id": 18,
+        "name": "Stone Percussion",
+        "universe": "Mesozoic",
+        "specialty": "Musicians",
+        "fun": -3,
+        "hire": true,
+        "effect1": "Spark: +55 with Beasthuntress",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return hand.contains('Beasthuntress') ? 55 : 0;},
+        "effect2": "Hire: +20 if invited with 43 or less Money",
+        "effect2IsHire": true,
+        "effect2IsTrend": false,
+        effect2Score: function(hand) {return this.effect2IsHireActive ? 20 : 0;},
+        "description": "Play percussive symphonies on ancient rock instruments."
     },
     {
-      id: 19,
-      suit: 'Flame',
-      name: 'Lightning',
-      strength: 11,
-      bonus: '+30 with <span class="weather">Rainstorm</span>.',
-      penalty: null,
-      bonusScore: function(hand) {
-        return hand.contains('Rainstorm') ? 30 : 0;
-      },
-      relatedSuits: [],
-      relatedCards: ['Rainstorm']
+        "id": 19,
+        "name": "Bone Orchestra",
+        "universe": "Ghoulhaven",
+        "specialty": "Musicians",
+        "fun": -4,
+        "hire": true,
+        "effect1": "Spark: +50 with Spirit Sonata",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return hand.contains('Spirit Sonata') ? 50 : 0;},
+        "effect2": "Hire: +20 if invited with 43 or less Money",
+        "effect2IsHire": true,
+        "effect2IsTrend": false,
+        effect2Score: function(hand) {return this.effect2IsHireActive ? 20 : 0;},
+        "description": "A skeleton orchestra that creates eerie symphonies."
     },
     {
-      id: 20,
-      suit: 'Flame',
-      name: 'Fire Elemental',
-      strength: 4,
-      bonus: '+15 for each other <span class="flame">Flame</span>.',
-      penalty: null,
-      bonusScore: function(hand) {
-        return 15 * hand.countSuitExcluding('Flame', this.id);
-      },
-      relatedSuits: ['Flame'],
-      relatedCards: []
+        "id": 20,
+        "name": "Poltergeist",
+        "universe": "Ghoulhaven",
+        "specialty": "Games",
+        "fun": -1,
+        "hire": true,
+        "effect1": "Hire: +86 if invited with Money amount that contains \"7\"",
+        "effect1IsHire": true,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return this.effect1IsHireActive ? 86 : 0;},
+        "effect2": "Hire: Exposed in front of you and cannot be discarded.",
+        "effect2IsHire": false,
+        "effect2IsTrend": false,
+        "description": "Hosts the scariest haunting mansion experience."
     },
     {
-      id: 21,
-      suit: 'Army',
-      name: 'Knights',
-      strength: 20,
-      bonus: null,
-      penalty: '-8 unless with at least one <span class="leader">Leader</span>.',
-      penaltyScore: function(hand) {
-        return hand.containsSuit('Leader') ? 0 : -8;
-      },
-      relatedSuits: ['Leader'],
-      relatedCards: []
+        "id": 21,
+        "name": "Spectral Legion",
+        "universe": "Ghoulhaven",
+        "specialty": "Spectacle",
+        "fun": -6,
+        "hire": true,
+        "effect1": "Spark: +16 for each other Ghoulhaven",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return 16 * hand.containsUniverseExcluding('Ghoulhaven', this.id);},
+        "effect2": "Hire: +20 if invited from Obscurity",
+        "effect2IsHire": true,
+        "effect2IsTrend": false,
+        effect2Score: function(hand) {return this.effect2IsHireActive ? 20 : 0;},
+        "description": "Marches in ghostly cadence that spooks the audience."
     },
     {
-      id: 22,
-      suit: 'Army',
-      name: 'Elven Archers',
-      strength: 10,
-      bonus: '+5 if no <span class="weather">Weather</span>.',
-      penalty: null,
-      bonusScore: function(hand) {
-        return hand.containsSuit('Weather') ? 0 : 5;
-      },
-      relatedSuits: ['Weather'],
-      relatedCards: []
+        "id": 22,
+        "name": "Corporate Mogul",
+        "universe": "Archons",
+        "specialty": "Storytellers",
+        "fun": -2,
+        "hire": true,
+        "effect1": "Hire: +87 if invited with Money amount that contains \"2\"",
+        "effect1IsHire": true,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return this.effect1IsHireActive ? 87 : 0;},
+        "effect2": "Hire: Exposed in front of you and cannot be discarded.",
+        "effect2IsHire": false,
+        "effect2IsTrend": false,
+        "description": "Shares stories from industries and the cyberpunk city"
     },
     {
-      id: 23,
-      suit: 'Army',
-      name: 'Light Cavalry',
-      strength: 17,
-      bonus: null,
-      penalty: '-2 for each <span class="land">Land</span>.',
-      penaltyScore: function(hand) {
-        return -2 * hand.countSuit('Land');
-      },
-      relatedSuits: ['Land'],
-      relatedCards: []
-
+        "id": 23,
+        "name": "Desert Strings",
+        "universe": "Golden Reach",
+        "specialty": "Musicians",
+        "fun": -8,
+        "hire": true,
+        "effect1": "Spark: +35 with other Musicians",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return hand.containsSpecialtyExcluding('Musicians', this.id) ? 35 : 0;},
+        "effect2": "Hire: +20 if invited from Obscurity",
+        "effect2IsHire": true,
+        "effect2IsTrend": false,
+        effect2Score: function(hand) {return this.effect2IsHireActive ? 20 : 0;},
+        "description": "Plays soothing string instruments, evoking the spirit of the sands."
     },
     {
-      id: 24,
-      suit: 'Army',
-      name: 'Dwarvish Infantry',
-      strength: 15,
-      bonus: null,
-      penalty: '-2 for each other <span class="army">Army</span>.',
-      penaltyScore: function(hand) {
-        if (!hand.containsId(25)) { // clears the word 'Army' from the penalty
-          return -2 * hand.countSuitExcluding('Army', this.id);
-        }
-        return 0;
-      },
-      relatedSuits: ['Army'],
-      relatedCards: []
+        "id": 24,
+        "name": "Duneworm Riders",
+        "universe": "Golden Reach",
+        "specialty": "Spectacle",
+        "fun": 1,
+        "hire": true,
+        "effect1": "Hire: +84 if invited with Money amount that contains \"1\"",
+        "effect1IsHire": true,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return this.effect1IsHireActive ? 84 : 0;},
+        "effect2": "Hire: Exposed in front of you and cannot be discarded.",
+        "effect2IsHire": false,
+        "effect2IsTrend": false,
+        "description": "Ride gigantic sand worms and stuns the audiences."
     },
     {
-      id: 25,
-      suit: 'Army',
-      name: 'Rangers',
-      strength: 5,
-      bonus: '+10 for each <span class="land">Land</span>. <br />CLEARS the word <span class="army">Army</span> from all Penalties.',
-      penalty: null,
-      bonusScore: function(hand) {
-        return 10 * hand.countSuit('Land');
-      },
-      relatedSuits: ['Land', 'Army'],
-      relatedCards: []
+        "id": 25,
+        "name": "Turban Tailor",
+        "universe": "Golden Reach",
+        "specialty": "Fashion",
+        "fun": 6,
+        "hire": true,
+        "effect1": "Spark: +35 with other Golden Reach",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return hand.containsUniverseExcluding('Golden Reach', this.id) ? 35 : 0;},
+        "effect2": "Hire: +20 if invited with 43 or less Money",
+        "effect2IsHire": true,
+        "effect2IsTrend": false,
+        effect2Score: function(hand) {return this.effect2IsHireActive ? 20 : 0;},
+        "description": "Crafts beautiful turbans from desert fabrics."
     },
     {
-      id: 26,
-      suit: 'Wizard',
-      name: 'Collector',
-      strength: 7,
-      bonus: '+10 if three different cards in same suit, +40 if four different cards in same suit, +100 if five different cards in same suit.',
-      penalty: null,
-      bonusScore: function(hand) {
-        var bySuit = {};
-        for (const card of hand.nonBlankedCards()) {
-          var suit = card.suit;
-          if (bySuit[suit] === undefined) {
-            bySuit[suit] = {};
-          }
-          bySuit[suit][card.name] = card;
-        }
-        var bonus = 0;
-        for (const suit of Object.values(bySuit)) {
-          var count = Object.keys(suit).length;
-          if (count === 3) {
-            bonus += 10;
-          } else if (count === 4) {
-            bonus += 40;
-          } else if (count >= 5) {
-            bonus += 100;
-          }
-        }
-        return bonus;
-      },
-      relatedSuits: allSuits(),
-      relatedCards: []
+        "id": 26,
+        "name": "Dionysus",
+        "universe": "Olympians",
+        "specialty": "Food and Drinks",
+        "fun": 20,
+        "hire": false,
+        "effect1": "Spark: +35 if with Apollo or Nine Muses",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return hand.contains('Apollo') || hand.contains('Nine Muses') ? 35 : 0;},
+        "effect2IsHire": false,
+        "effect2IsTrend": false,
+        "description": "God of wine and festivity, brings merriment and endless wine."
     },
     {
-      id: 27,
-      suit: 'Wizard',
-      name: 'Beastmaster',
-      strength: 9,
-      bonus: '+9 for each <span class="beast">Beast</span>. <br />CLEARS the Penalty on all <span class="beast">Beasts</span>.',
-      penalty: null,
-      bonusScore: function(hand) {
-        return 9 * hand.countSuit('Beast');
-      },
-      clearsPenalty: function(card) {
-        return card.suit === 'Beast';
-      },
-      relatedSuits: ['Beast'],
-      relatedCards: []
+        "id": 27,
+        "name": "Apollo",
+        "universe": "Olympians",
+        "specialty": "Musicians",
+        "fun": 18,
+        "hire": false,
+        "effect1": "Spark: +35 if with Nine Muses or Dionysus",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return hand.contains('Nine Muses') || hand.contains('Dionysus') ? 35 : 0;},
+        "effect2IsHire": false,
+        "effect2IsTrend": false,
+        "description": "God of music, plays divine melodies that enchant all attendees."
     },
     {
-      id: 28,
-      suit: 'Wizard',
-      name: 'Necromancer',
-      strength: 3,
-      bonus: 'At the end of the game, you may take one <span class="army">Army</span>, <span class="leader">Leader</span>, <span class="wizard">Wizard</span>, or <span class="beast">Beast</span> from the discard pile and add it to your hand as an eighth card.',
-      penalty: null,
-      relatedSuits: ['Army', 'Leader', 'Wizard', 'Beast'],
-      relatedCards: []
+        "id": 28,
+        "name": "Nine Muses",
+        "universe": "Olympians",
+        "specialty": "Performers",
+        "fun": 16,
+        "hire": false,
+        "effect1": "Spark: +35 if with Dionysus or Apollo",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return hand.contains('Dionysus') || hand.contains('Apollo') ? 35 : 0;},
+        "effect2IsHire": false,
+        "effect2IsTrend": false,
+        "description": "Divine sisters who enchant the party with arts and inspirations."
     },
     {
-      id: 29,
-      suit: 'Wizard',
-      name: 'Warlock Lord',
-      strength: 25,
-      bonus: null,
-      penalty: '-10 for each <span class="leader">Leader</span> and other <span class="wizard">Wizard</span>.',
-      penaltyScore: function(hand) {
-        return -10 * (hand.countSuit('Leader') + hand.countSuitExcluding('Wizard', this.id));
-      },
-      relatedSuits: ['Leader', 'Wizard'],
-      relatedCards: []
+        "id": 29,
+        "name": "Zeus",
+        "universe": "Olympians",
+        "specialty": "Spectacle",
+        "fun": 29,
+        "hire": false,
+        "effect1": "Spark: +120 for 5 Olympians, \n+170 for 6 Olympians, \n+270 for 7 Olympians",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {var count = hand.countUniverse('Olympians'); var bonus = 0; if (count === 5) {bonus += 120; } else if (count === 6) {bonus += 170; } else if (count === 7) {bonus += 270; } return bonus;},
+        "effect2IsHire": false,
+        "effect2IsTrend": false,
+        "description": "King of the gods, controls lightning for a breathtaking display."
     },
     {
-      id: 30,
-      suit: 'Wizard',
-      name: 'Enchantress',
-      strength: 5,
-      bonus: '+5 for each <span class="land">Land</span>, <span class="weather">Weather</span>, <span class="flood">Flood</span>, and <span class="flame">Flame</span>.',
-      penalty: null,
-      bonusScore: function(hand) {
-        return 5 * (hand.countSuit('Land') + hand.countSuit('Weather') + hand.countSuit('Flood') + hand.countSuit('Flame'));
-      },
-      relatedSuits: ['Land', 'Weather', 'Flood', 'Flame'],
-      relatedCards: []
+        "id": 30,
+        "name": "Steam Pipers",
+        "universe": "Gearwrights",
+        "specialty": "Musicians",
+        "fun": 3,
+        "hire": false,
+        "effect1": "Spark: +25 with The Queen or Neon DJ",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return hand.contains('The Queen') || hand.contains('Neon DJ') ? 25 : 0;},
+        "effect2": "Spark: +25 with Slot Machiner or Acrobatic Monkeys",
+        "effect2IsHire": false,
+        "effect2IsTrend": false,
+        effect2Score: function(hand) {return hand.contains('Slot Machiner') || hand.contains('Acrobatic Monkeys') ? 25 : 0;},
+        "description": "Plays a multi-pipe organ that uses steam to create music."
     },
     {
-      id: 31,
-      suit: 'Leader',
-      name: 'King',
-      strength: 8,
-      bonus: '+5 for each <span class="army">Army</span>. <br />OR +20 for each <span class="army">Army</span> if with <span class="leader">Queen</span>.',
-      penalty: null,
-      bonusScore: function(hand) {
-        return (hand.contains('Queen') ? 20 : 5) * hand.countSuit('Army');
-      },
-      relatedSuits: ['Army'],
-      relatedCards: ['Queen']
+        "id": 31,
+        "name": "Slot Machiner",
+        "universe": "Gearwrights",
+        "specialty": "Games",
+        "fun": 3,
+        "hire": false,
+        "effect1": "Spark: +50 with Elder Turtle",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return hand.contains('Elder Turtle') ? 50 : 0;},
+        "effect2": "Trend: +30 if Virtual Arena Master is in another Party",
+        "effect2IsHire": false,
+        "effect2IsTrend": true,
+        effect2Score: function(hand) {return this.effect2IsTrendActive ? 30 : 0;},
+        "description": "Challenges guests with steam-powered mechanical slot machines."
     },
     {
-      id: 32,
-      suit: 'Leader',
-      name: 'Queen',
-      strength: 6,
-      bonus: '+5 for each <span class="army">Army</span>. <br />OR +20 for each <span class="army">Army</span> if with <span class="leader">King</span>.',
-      penalty: null,
-      bonusScore: function(hand) {
-        return (hand.contains('King') ? 20 : 5) * hand.countSuit('Army');
-      },
-      relatedSuits: ['Army'],
-      relatedCards: ['King']
+        "id": 32,
+        "name": "Steam Automater",
+        "universe": "Gearwrights",
+        "specialty": "Spectacle",
+        "fun": 32,
+        "hire": false,
+        "effect1": "Spark: +20 with any Atlantis",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return hand.containsUniverse('Atlantis') ? 20 : 0;},
+        "effect2IsHire": false,
+        "effect2IsTrend": false,
+        "description": "Operates steam-powered automatons for shows."
     },
     {
-      id: 33,
-      suit: 'Leader',
-      name: 'Princess',
-      strength: 2,
-      bonus: '+8 for each <span class="army">Army</span>, <span class="wizard">Wizard</span>, and other <span class="leader">Leader</span>.',
-      penalty: null,
-      bonusScore: function(hand) {
-        return 8 * (hand.countSuit('Army') + hand.countSuit('Wizard') + hand.countSuitExcluding('Leader', this.id));
-      },
-      relatedSuits: ['Army', 'Wizard', 'Leader'],
-      relatedCards: []
+        "id": 33,
+        "name": "The Queen",
+        "universe": "Gearwrights",
+        "specialty": "Storytellers",
+        "fun": 33,
+        "hire": false,
+        "effect1": "Spark: +20 for each other Gearwrights",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return 20 * hand.countUniverseExcluding('Gearwrights', this.id);},
+        "effect2IsHire": false,
+        "effect2IsTrend": false,
+        "description": "The monarch, driving innovation in the empire."
     },
     {
-      id: 34,
-      suit: 'Leader',
-      name: 'Warlord',
-      strength: 4,
-      bonus: 'The sum of the base strength of all <span class="army">Armies</span>.',
-      penalty: null,
-      bonusScore: function(hand) {
-        var total = 0;
-        for (const card of hand.nonBlankedCards()) {
-          if (card.suit === 'Army') {
-            total += card.strength;
-          }
-        }
-        return total;
-      },
-      relatedSuits: ['Army'],
-      relatedCards: []
+        "id": 34,
+        "name": "Forest Ensemble",
+        "universe": "Mystic Grove",
+        "specialty": "Musicians",
+        "fun": 22,
+        "hire": false,
+        "effect1": "Spark: +40 with Steam Piper",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return hand.contains('Steam Piper') ? 40 : 0;},
+        "effect2": "Spark: +40 with Acrobatic Monkeys",
+        "effect2IsHire": false,
+        "effect2IsTrend": false,
+        effect2Score: function(hand) {return hand.contains('Acrobatic Monkeys') ? 40 : 0;},
+        "description": "Draw melodies from the enchanted forest."
     },
     {
-      id: 35,
-      suit: 'Leader',
-      name: 'Empress',
-      strength: 15,
-      bonus: '+10 for each <span class="army">Army</span>.',
-      penalty: '-5 for each other <span class="leader">Leader</span>.',
-      bonusScore: function(hand) {
-        return 10 * hand.countSuit('Army');
-      },
-      penaltyScore: function(hand) {
-        return -5 * hand.countSuitExcluding('Leader', this.id);
-      },
-      relatedSuits: ['Army', 'Leader'],
-      relatedCards: []
+        "id": 35,
+        "name": "Acrobatic Monkeys",
+        "universe": "Mystic Grove",
+        "specialty": "Performers",
+        "fun": 38,
+        "hire": false,
+        "effect1": "Clash: -20 with any Archons",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return hand.containsUniverse('Archons') ? -20 : 0;},
+        "effect2IsHire": false,
+        "effect2IsTrend": false,
+        "description": "Performs dazzling aerial dances that captivate all who watch."
     },
     {
-      id: 36,
-      suit: 'Beast',
-      name: 'Unicorn',
-      strength: 9,
-      bonus: '+30 with <span class="leader">Princess</span>. <br />OR +15 with <span class="leader">Empress</span>, <span class="leader">Queen</span>, or <span class="leader">Enchantress</span>.',
-      penalty: null,
-      bonusScore: function(hand) {
-        return hand.contains('Princess') ? 30 : (hand.contains('Empress') || hand.contains('Queen') || hand.contains('Enchantress')) ? 15 : 0;
-      },
-      relatedSuits: [],
-      relatedCards: ['Princess', 'Empress', 'Queen', 'Enchantress']
+        "id": 36,
+        "name": "Ancient Ent",
+        "universe": "Mystic Grove",
+        "specialty": "Storytellers",
+        "fun": 0,
+        "hire": false,
+        "effect1": "Spark: +200 if all cards are from different Specialties",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {var specialties = []; for (const card of hand.nonBlankedCards()) {if (specialties.includes(card.specialty)) {  return 0;}specialties.push(card.specialty); } return 200;},
+        "effect2IsHire": false,
+        "effect2IsTrend": false,
+        "description": "Recounts millennia-old forest legends."
     },
     {
-      id: 37,
-      suit: 'Beast',
-      name: 'Basilisk',
-      strength: 35,
-      bonus: null,
-      penalty: 'BLANKS all <span class="army">Armies</span>, <span class="leader">Leaders</span>, and other <span class="beast">Beasts</span>.',
-      blanks: function(card, hand) {
-        return (card.suit === 'Army' && !hand.containsId(25)) || // clears the word 'Army' from the penalty
-          card.suit === 'Leader' ||
-          (card.suit === 'Beast' && card.id !== this.id);
-      },
-      relatedSuits: ['Army', 'Leader', 'Beast'],
-      relatedCards: []
+        "id": 37,
+        "name": "Leafweaver",
+        "universe": "Mystic Grove",
+        "specialty": "Fashion",
+        "fun": 12,
+        "hire": false,
+        "effect1": "Spark: +50 with Bone Armorer",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return hand.contains('Bone Armorer') ? 50 : 0;},
+        "effect2": "Spark: +30 with any other Mystic Grove",
+        "effect2IsHire": false,
+        "effect2IsTrend": false,
+        effect2Score: function(hand) {return hand.containsUniverse('Mystic Grove') ? 30 : 0;},
+        "description": "Creates beautiful garments from leaves and flowers."
     },
     {
-      id: 38,
-      suit: 'Beast',
-      name: 'Warhorse',
-      strength: 6,
-      bonus: '+14 with any <span class="leader">Leader</span> or <span class="wizard">Wizard</span>.',
-      penalty: null,
-      bonusScore: function(hand) {
-        return hand.containsSuit('Leader') || hand.containsSuit('Wizard') ? 14 : 0;
-      },
-      relatedSuits: ['Leader', 'Wizard'],
-      relatedCards: []
+        "id": 38,
+        "name": "Cosmic Mixologist",
+        "universe": "Interstellar Council",
+        "specialty": "Food and Drinks",
+        "fun": -30,
+        "hire": false,
+        "effect1": "Spark: +20 for each other Even Cards",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {var evens = 0; for (const card of hand.nonBlankedCards()) {if (card.id != this.id && (card.fun % 2) == 0) {  evens++;} } return 20 * evens;},
+        "effect2IsHire": false,
+        "effect2IsTrend": false,
+        "description": "Serves up drinks from different space systems."
     },
     {
-      id: 39,
-      suit: 'Beast',
-      name: 'Dragon',
-      strength: 30,
-      bonus: null,
-      penalty: '-40 unless with at least one <span class="wizard">Wizard</span>.',
-      penaltyScore: function(hand) {
-        return hand.containsSuit('Wizard') ? 0 : -40;
-      },
-      relatedSuits: ['Wizard'],
-      relatedCards: []
+        "id": 39,
+        "name": "Interplanetary Racer",
+        "universe": "Interstellar Council",
+        "specialty": "Games",
+        "fun": 42,
+        "hire": false,
+        "effect1": "Spark: +42 with any other Games",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return hand.containsSpecialtyExcluding('Games', this.id) ? 42 : 0;},
+        "effect2": "Trend: +42 if Broomstick Racer is in another Party",
+        "effect2IsHire": false,
+        "effect2IsTrend": true,
+        effect2Score: function(hand) {return this.effect2IsTrendActive ? 42 : 0;},
+        "description": "Hosts the interplanetary spaceship race."
     },
     {
-      id: 40,
-      suit: 'Beast',
-      name: 'Hydra',
-      strength: 12,
-      bonus: '+28 with <span class="flood">Swamp</span>.',
-      penalty: null,
-      bonusScore: function(hand) {
-        return hand.contains('Swamp') ? 28 : 0;
-      },
-      relatedSuits: [],
-      relatedCards: ['Swamp']
+        "id": 40,
+        "name": "Space Dragon Tamers",
+        "universe": "Interstellar Council",
+        "specialty": "Spectacle",
+        "fun": 1,
+        "hire": false,
+        "effect1": "Spark: +150 with Dragon Dancers and Imperial Fireworks",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return hand.contains('Dragon Dancers') && hand.contains('Imperial Fireworks') ? 150 : 0;},
+        "effect2IsHire": false,
+        "effect2IsTrend": false,
+        "description": "Showcase the majestic space dragons."
     },
     {
-      id: 41,
-      suit: 'Weapon',
-      name: 'Warship',
-      strength: 23,
-      bonus: 'CLEARS the word <span class="army">Army</span> from all Penalties of all <span class="flood">Floods</span>.',
-      penalty: 'BLANKED unless with at least one <span class="flood">Flood</span>.',
-      blankedIf: function(hand) {
-        return !hand.containsSuit('Flood');
-      },
-      relatedSuits: ['Army', 'Flood'],
-      relatedCards: []
+        "id": 41,
+        "name": "Five Elders",
+        "universe": "Interstellar Council",
+        "specialty": "Storytellers",
+        "fun": 0,
+        "hire": false,
+        "effect1": "Spark: +200 if all cards are from different Universes",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {var universes = []; for (const card of hand.nonBlankedCards()) {if (universes.includes(card.universe)) {  return 0;}universes.push(card.universe); } return 200;},
+        "effect2IsHire": false,
+        "effect2IsTrend": false,
+        "description": "Mesmerizes younger races with ancient cosmic lore."
     },
     {
-      id: 42,
-      suit: 'Weapon',
-      name: 'Magic Wand',
-      strength: 1,
-      bonus: '+25 with any one <span class="wizard">Wizard</span>.',
-      penalty: null,
-      bonusScore: function(hand) {
-        return hand.containsSuit('Wizard') ? 25 : 0;
-      },
-      relatedSuits: ['Wizard'],
-      relatedCards: []
+        "id": 42,
+        "name": "Astro-Armorer",
+        "universe": "Interstellar Council",
+        "specialty": "Fashion",
+        "fun": 10,
+        "hire": false,
+        "effect1": "Spark: +50 with Cosmic Mixologist",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return hand.contains('Cosmic Mixologist') ? 50 : 0;},
+        "effect2IsHire": false,
+        "effect2IsTrend": false,
+        "description": "Makes suits for any planetary atmosphere."
     },
     {
-      id: 43,
-      suit: 'Weapon',
-      name: 'Sword of Keth',
-      strength: 7,
-      bonus: '+10 with any one <span class="leader">Leader</span>. <br />OR +40 with both <span class="leader">Leader</span> and <span class="artifact">Shield of Keth</span>.',
-      penalty: null,
-      bonusScore: function(hand) {
-        return hand.containsSuit('Leader') ? (hand.contains('Shield of Keth') ? 40 : 10) : 0;
-      },
-      relatedSuits: ['Leader'],
-      relatedCards: ['Shield of Keth']
+        "id": 43,
+        "name": "Celestial Chef",
+        "universe": "Heavenly Empire",
+        "specialty": "Food and Drinks",
+        "fun": 6,
+        "hire": false,
+        "effect1": "Spark: +50 with Cyber Food Truck",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return hand.contains('Cyber Food Truck') ? 50 : 0;},
+        "effect2": "Spark: +20 with any Nusantara",
+        "effect2IsHire": false,
+        "effect2IsTrend": false,
+        effect2Score: function(hand) {return hand.containsUniverse('Nusantara') ? 20 : 0;},
+        "description": "Prepares meals that could be served in heavenly banquets."
     },
     {
-      id: 44,
-      suit: 'Weapon',
-      name: 'Elven Longbow',
-      strength: 3,
-      bonus: '+30 with <span class="army">Elven Archers</span>, <span class="leader">Warlord</span> or <span class="wizard">Beastmaster</span>.',
-      penalty: null,
-      bonusScore: function(hand) {
-        return hand.contains('Elven Archers') || hand.contains('Warlord') || hand.contains('Beastmaster') ? 30 : 0;
-      },
-      relatedSuits: [],
-      relatedCards: ['Elven Archers', 'Warlord', 'Beastmaster']
+        "id": 44,
+        "name": "Imperial Fireworks",
+        "universe": "Heavenly Empire",
+        "specialty": "Spectacle",
+        "fun": 5,
+        "hire": false,
+        "effect1": "Spark: +75 with Dragon Dancers",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return hand.contains('Dragon Dancers') ? 75 : 0;},
+        "effect2IsHire": false,
+        "effect2IsTrend": false,
+        "description": "Crafts fireworks that mimic celestial phenomena."
     },
     {
-      id: 45,
-      suit: 'Weapon',
-      name: 'War Dirigible',
-      strength: 35,
-      bonus: null,
-      penalty: 'BLANKED unless with at least one <span class="army">Army</span>. <br />BLANKED with any <span class="weather">Weather</span>.',
-      blankedIf: function(hand) {
-        return !hand.containsSuit('Army') || hand.containsSuit('Weather');
-      },
-      relatedSuits: ['Army', 'Weather'],
-      relatedCards: []
+        "id": 45,
+        "name": "The Emperor",
+        "universe": "Heavenly Empire",
+        "specialty": "Storytellers",
+        "fun": 0,
+        "hire": false,
+        "effect1": "Spark: +50 for 3-Card Run, \n+70 for 4-Card Run, \n+100 for 5-Card Run, \n+150 for 6-Card Run, \n+250 for 7-Card Run",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {var funs = hand.cards().map(card => card.fun); var currentRun = 0; var runs = []; for (var i = -35; i <= 60; i++) {if (funs.includes(i)) {  currentRun++;} else {  runs.push(currentRun);  currentRun = 0;} } var bonus = 0; for (var run of runs) {if (run === 3) {  bonus += 50;} else if (run === 4) {  bonus += 70;} else if (run === 5) {  bonus += 100;} else if (run === 6) {  bonus += 150;} else if (run >= 7) {  bonus += 250;} } return bonus;},
+        "effect2IsHire": false,
+        "effect2IsTrend": false,
+        "description": "Narrates legendary tales of heroes that shaped the kingdom."
     },
     {
-      id: 46,
-      suit: 'Artifact',
-      name: 'Shield of Keth',
-      strength: 4,
-      bonus: '+15 with any one <span class="leader">Leader</span>. <br />OR +40 with both <span class="leader">Leader</span> and <span class="weapon">Sword of Keth</span>.',
-      penalty: null,
-      bonusScore: function(hand) {
-        return hand.containsSuit('Leader') ? (hand.contains('Sword of Keth') ? 40 : 15) : 0;
-      },
-      relatedSuits: ['Leader'],
-      relatedCards: ['Sword of Keth']
+        "id": 46,
+        "name": "Triton",
+        "universe": "Atlantis",
+        "specialty": "Musicians",
+        "fun": 35,
+        "hire": false,
+        "effect1": "Spark: +45 with Hera",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return hand.contains('Hera') ? 45 : 0;},
+        "effect2": "Spark: +45 with Seawear Designer",
+        "effect2IsHire": false,
+        "effect2IsTrend": false,
+        effect2Score: function(hand) {return hand.contains('Seawear Designer') ? 45 : 0;},
+        "description": "Conjures magical oceanic harmonies with his ancient conch shell."
     },
     {
-      id: 47,
-      suit: 'Artifact',
-      name: 'Gem of Order',
-      strength: 5,
-      bonus: '+10 for 3-card run, +30 for 4-card run, +60 for 5-card run, +100 for 6-card run, +150 for 7-card run. <br />(This refers to the base strength numbers.)',
-      penalty: null,
-      bonusScore: function(hand) {
-        var strengths = hand.nonBlankedCards().map(card => card.strength);
-        var currentRun = 0;
-        var runs = [];
-        for (var i = 0; i <= 40; i++) {
-          if (strengths.includes(i)) {
-            currentRun++;
-          } else {
-            runs.push(currentRun);
-            currentRun = 0;
-          }
-        }
-        var bonus = 0;
-        for (var run of runs) {
-          if (run === 3) {
-            bonus += 10;
-          } else if (run === 4) {
-            bonus += 30;
-          } else if (run === 5) {
-            bonus += 60;
-          } else if (run === 6) {
-            bonus += 100;
-          } else if (run >= 7) {
-            bonus += 150;
-          }
-        }
-        return bonus;
-      },
-      relatedSuits: [],
-      relatedCards: []
+        "id": 47,
+        "name": "Poseidon",
+        "universe": "Atlantis",
+        "specialty": "Games",
+        "fun": 40,
+        "hire": false,
+        "effect1": "Spark: +15 for each other Atlantis",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return 15 * hand.countUniverseExcluding('Atlantis', this.id);},
+        "effect2": "Trend: +30 if Pinisi Boat Racer is in another Party",
+        "effect2IsHire": false,
+        "effect2IsTrend": true,
+        effect2Score: function(hand) {return this.effect2IsTrendActive ? 30 : 0;},
+        "description": "Challenges guests with a grand treasure hunt under the ocean."
     },
     {
-      id: 48,
-      suit: 'Artifact',
-      name: 'World Tree',
-      strength: 2,
-      bonus: '+50 if every non-BLANKED card is a different suit.',
-      penalty: null,
-      bonusScore: function(hand) {
-        var suits = [];
-        for (const card of hand.nonBlankedCards()) {
-          if (suits.includes(card.suit)) {
-            return 0;
-          }
-          suits.push(card.suit);
-        }
-        return 50;
-      },
-      relatedSuits: allSuits(),
-      relatedCards: []
+        "id": 48,
+        "name": "Siren Queen",
+        "universe": "Atlantis",
+        "specialty": "Spectacle",
+        "fun": -4,
+        "hire": false,
+        "effect1": "Spark: +20 with any Storytellers",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return hand.containsSpecialty('Storytellers') ? 20 : 0;},
+        "effect2": "Spark: +10 for each other Spectacle",
+        "effect2IsHire": false,
+        "effect2IsTrend": false,
+        effect2Score: function(hand) {return 10 * hand.containsSpecialtyExcluding('Spectacle', this.id);},
+        "description": "Showcases sea monsters from the depth of the ocean."
     },
     {
-      id: 49,
-      suit: 'Artifact',
-      name: 'Book of Changes',
-      strength: 3,
-      bonus: 'You may change the suit of one other card. Its name, bonuses and penalties remain the same.',
-      penalty: null,
-      action: 'Pick a suit and a target card from your hand.',
-      relatedSuits: [], // empty because the main reason for relatedSuits is to determine how to use 'Book of Changes'
-      relatedCards: []
+        "id": 49,
+        "name": "Elder Turtle",
+        "universe": "Atlantis",
+        "specialty": "Storytellers",
+        "fun": 1,
+        "hire": false,
+        "effect1": "Spark: +30 without Musicians",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return hand.containsSpecialty('Musicians') ? 0 : 30;},
+        "effect2": "Spark: +30 with any Nusantara",
+        "effect2IsHire": false,
+        "effect2IsTrend": false,
+        effect2Score: function(hand) {return hand.containsUniverse('Nusantara') ? 30 : 0;},
+        "description": "Shares ancient tales of the deep and the mysteries of the ocean."
     },
     {
-      id: 50,
-      suit: 'Artifact',
-      name: 'Protection Rune',
-      strength: 1,
-      bonus: 'CLEARS the Penalty on all cards.',
-      penalty: null,
-      clearsPenalty: function(card) {
-        return true;
-      },
-      relatedSuits: [],
-      relatedCards: []
+        "id": 50,
+        "name": "Magizoologist",
+        "universe": "Hexward",
+        "specialty": "Performers",
+        "fun": 2,
+        "hire": false,
+        "effect1": "Spark: +70 with Beasthuntress",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return hand.contains('Beasthuntress') ? 70 : 0;},
+        "effect2IsHire": false,
+        "effect2IsTrend": false,
+        "description": "Showcases magical creatures."
     },
     {
-      id: 51,
-      suit: 'Wild',
-      name: 'Shapeshifter',
-      strength: 0,
-      bonus: '<b>Shapeshifter</b> may duplicate the name and suit of any one <span class="artifact">Artifact</span>, <span class="leader">Leader</span>, <span class="wizard">Wizard</span>, <span class="weapon">Weapon</span> or <span class="beast">Beast</span> in the game. <br />Does not take the bonus, penalty, or base strength of the card duplicated.',
-      penalty: null,
-      action: 'Pick a target card to duplicate.',
-      relatedSuits: ['Artifact', 'Leader', 'Wizard', 'Weapon', 'Beast'].sort(),
-      relatedCards: []
+        "id": 51,
+        "name": "Broomstick Racer",
+        "universe": "Hexward",
+        "specialty": "Games",
+        "fun": 7,
+        "hire": false,
+        "effect1": "Spark: +50 with Headmaster",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return hand.contains('Headmaster') ? 50 : 0;},
+        "effect2": "Trend: +30 if Interplanetary Racer is in another Party",
+        "effect2IsHire": false,
+        "effect2IsTrend": true,
+        effect2Score: function(hand) {return this.effect2IsTrendActive ? 30 : 0;},
+        "description": "Hosts a grand broomstick race in enchanted ruins."
     },
     {
-      id: 52,
-      suit: 'Wild',
-      name: 'Mirage',
-      strength: 0,
-      bonus: '<b>Mirage</b> may duplicate the name and suit of any one <span class="army">Army</span>, <span class="land">Land</span>, <span class="weather">Weather</span>, <span class="flood">Flood</span> or <span class="flame">Flame</span> in the game. <br />Does not take the bonus, penalty, or base strength of the card duplicated.',
-      penalty: null,
-      action: 'Pick a target card to duplicate.',
-      relatedSuits: ['Army', 'Land', 'Weather', 'Flood', 'Flame'].sort(),
-      relatedCards: []
+        "id": 52,
+        "name": "Headmaster",
+        "universe": "Hexward",
+        "specialty": "Storytellers",
+        "fun": -7,
+        "hire": false,
+        "effect1": "Spark: +20 for each other Odd Card",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {var odds = 0; for (const card of hand.nonBlankedCards()) {if (card.id != this.id && (card.fun % 2) == 1) {  odds++;} } return 20 * odds;},
+        "effect2IsHire": false,
+        "effect2IsTrend": false,
+        "description": "The headmaster that tells stories with magic."
     },
     {
-      id: 53,
-      suit: 'Wild',
-      name: 'Doppelgänger',
-      strength: 0,
-      bonus: '<b>Doppelgänger</b> may duplicate the name, base strength, suit, and penalty BUT NOT BONUS of any one other card in your hand.',
-      penalty: null,
-      action: 'Pick a card from your hand to duplicate.',
-      relatedSuits: [],
-      relatedCards: []
+        "id": 53,
+        "name": "Spicemaster",
+        "universe": "Nusantara",
+        "specialty": "Food and Drinks",
+        "fun": 7,
+        "hire": false,
+        "effect1": "Spark: +30 with any other Nusantara",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return hand.containsUniverseExcluding('Nusantara', this.id) ? 30 : 0;},
+        "effect2": "Spark: +30 with any other Food and Drinks",
+        "effect2IsHire": false,
+        "effect2IsTrend": false,
+        effect2Score: function(hand) {return hand.containsSpecialtyExcluding('Food and Drinks', this.id) ? 30 : 0;},
+        "description": "Craft dishes that are as vibrant and colorful as they are flavorful."
     },
     {
-      id: 54,
-      suit: 'Wizard',
-      name: 'Jester',
-      strength: 3,
-      bonus: '+3 for each other card with an odd base value. <br />OR +50 if entire hand has odd base values.',
-      penalty: null,
-      bonusScore: function(hand) {
-        var oddCount = 0;
-        for (const card of hand.nonBlankedCards()) {
-          if (card.strength % 2 === 1) {
-            oddCount++;
-          }
-        }
-        if (oddCount === hand.size()) {
-          return 50;
-        } else {
-          return (oddCount - 1) * 3;
-        }
-      },
-      relatedSuits: [],
-      relatedCards: []
+        "id": 54,
+        "name": "Pinisi Boat Racer",
+        "universe": "Nusantara",
+        "specialty": "Games",
+        "fun": 5,
+        "hire": false,
+        "effect1": "Spark: +30 with any Atlantis",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return hand.containsUniverse('Atlantis') ? 30 : 0;},
+        "effect2": "Trend: +50 if Poseidon is in another Party",
+        "effect2IsHire": false,
+        "effect2IsTrend": true,
+        effect2Score: function(hand) {return this.effect2IsTrendActive ? 50 : 0;},
+        "description": "Leads thrilling Pinisi boat races across the archipelago."
+    },
+    {
+        "id": 55,
+        "name": "Garuda",
+        "universe": "Nusantara",
+        "specialty": "Spectacle",
+        "fun": 17,
+        "hire": false,
+        "effect1": "Spark: +30 with any other Spectacle",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return hand.containsSpecialtyExcluding('Spectacle', this.id) ? 30 : 0;},
+        "effect2": "Spark: +20 with any Storytellers",
+        "effect2IsHire": false,
+        "effect2IsTrend": false,
+        effect2Score: function(hand) {return hand.containsSpecialty('Storytellers') ? 20 : 0;},
+        "description": "Dominates the sky and displays majestic flights."
+    },
+    {
+        "id": 56,
+        "name": "Gatotkaca",
+        "universe": "Nusantara",
+        "specialty": "Storytellers",
+        "fun": 8,
+        "hire": false,
+        "effect1": "Spark: +30 for each Games",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return 30 * hand.countSpecialty('Games');},
+        "effect2": "Spark: +15 for each other Nusantara",
+        "effect2IsHire": false,
+        "effect2IsTrend": false,
+        effect2Score: function(hand) {return 15 * hand.containsUniverseExcluding('Nusantara', this.id);},
+        "description": "Brings ancient warrior tales to life with drama and power."
+    },
+    {
+        "id": 57,
+        "name": "Meatmasters",
+        "universe": "Mesozoic",
+        "specialty": "Food and Drinks",
+        "fun": -1,
+        "hire": false,
+        "effect1": "Spark: +15 for each other Mesozoic",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return 15 * hand.containsUniverseExcluding('Mesozoic', this.id);},
+        "effect2": "Spark: +25 with any Storytellers",
+        "effect2IsHire": false,
+        "effect2IsTrend": false,
+        effect2Score: function(hand) {return hand.containsSpecialty('Storytellers') ? 25 : 0;},
+        "description": "Master roasters who turn fierce beasts into succulent feasts."
+    },
+    {
+        "id": 58,
+        "name": "Grand Fire",
+        "universe": "Mesozoic",
+        "specialty": "Performers",
+        "fun": -5,
+        "hire": false,
+        "effect1": "Spark: +15 for each other Low Cards",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {var lows = 0; for (const card of hand.nonBlankedCards()) {if (card.id != this.id && card.fun <= 10) {  lows++;} } return 15 * lows;},
+        "effect2": "Low Card: Card with 10 or less Base Fun",
+        "effect2IsHire": false,
+        "effect2IsTrend": false,
+        "description": "Ignite towering bonfires that light up amusing dance."
+    },
+    {
+        "id": 59,
+        "name": "Jungle Runner",
+        "universe": "Mesozoic",
+        "specialty": "Games",
+        "fun": 9,
+        "hire": false,
+        "effect1": "Spark: +150 with Virtual Arena Master and Pinisi Boat Racer",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return hand.contains('Virtual Arena Master') && hand.contains('Pinisi Boat Racer') ? 150 : 0;},
+        "effect2": "Trend: +50 if Athena is in another Party",
+        "effect2IsHire": false,
+        "effect2IsTrend": true,
+        effect2Score: function(hand) {return this.effect2IsTrendActive ? 50 : 0;},
+        "description": "Leads an epic capture-the-flag through dense, prehistoric jungles."
+    },
+    {
+        "id": 60,
+        "name": "Beasthuntress",
+        "universe": "Mesozoic",
+        "specialty": "Storytellers",
+        "fun": -4,
+        "hire": false,
+        "effect1": "Spark: +70 with Beastmaster",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return hand.contains('Beastmaster') ? 70 : 0;},
+        "effect2IsHire": false,
+        "effect2IsTrend": false,
+        "description": "The master of the ancient jungle that knows ancient survival skills."
+    },
+    {
+        "id": 61,
+        "name": "Bone Armorer",
+        "universe": "Mesozoic",
+        "specialty": "Fashion",
+        "fun": 0,
+        "hire": false,
+        "effect1": "Spark: +75 with 3 other Even Cards",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {var evens = 0; for (const card of hand.nonBlankedCards()) {if (card.id != this.id && (card.fun % 2) == 0) {  evens++;} } return evens >= 3 ? 75 : 0;},
+        "effect2": "Spark: +75 with 3 Odd Cards",
+        "effect2IsHire": false,
+        "effect2IsTrend": false,
+        effect2Score: function(hand) {var odds = 0; for (const card of hand.nonBlankedCards()) {if (card.id != this.id && (card.fun % 2) == 1) {  odds++;} } return odds >= 3 ? 75 : 0;},
+        "description": "Makes armors from bones and natural elements."
+    },
+    {
+        "id": 62,
+        "name": "Crypt Barista",
+        "universe": "Ghoulhaven",
+        "specialty": "Food and Drinks",
+        "fun": 1,
+        "hire": false,
+        "effect1": "Spark: +50 with Cyber Food Truck",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return hand.contains('Cyber Food Truck') ? 50 : 0;},
+        "effect2": "Spark: + 20 with any Hexward",
+        "effect2IsHire": false,
+        "effect2IsTrend": false,
+        effect2Score: function(hand) {return hand.containsUniverse('Hexward') ? 20 : 0;},
+        "description": "Serves ghastly drinks with a taste of death."
+    },
+    {
+        "id": 63,
+        "name": "Zombie Choreographer",
+        "universe": "Ghoulhaven",
+        "specialty": "Performers",
+        "fun": -2,
+        "hire": false,
+        "effect1": "Spark: +50 with Bone Orchestra",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return hand.contains('Bone Orchestra') ? 50 : 0;},
+        "effect2IsHire": false,
+        "effect2IsTrend": false,
+        "description": "Arranges a massive upbeat dance with zombies."
+    },
+    {
+        "id": 64,
+        "name": "Wraith Lord",
+        "universe": "Ghoulhaven",
+        "specialty": "Storytellers",
+        "fun": -20,
+        "hire": false,
+        "effect1": "Spark: +320 if all cards are Negative Cards",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {var negatives = 0; for (const card of hand.nonBlankedCards()) {if (card.fun < 0) {  negatives++;} } return negatives == 7 ? 320 : 0;},
+        "effect2": "Negative Card: Card with less than 0 Base Fun",
+        "effect2IsHire": false,
+        "effect2IsTrend": false,
+        "description": "Tells her chilling reigns and tales of the dead."
+    },
+    {
+        "id": 65,
+        "name": "Cyber Food Truck",
+        "universe": "Archons",
+        "specialty": "Food and Drinks",
+        "fun": -3,
+        "hire": false,
+        "effect1": "Spark: +50 with Five Elders",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return hand.contains('Five Elders') ? 50 : 0;},
+        "effect2": "Spark: +10 for each other Food and Drinks",
+        "effect2IsHire": false,
+        "effect2IsTrend": false,
+        effect2Score: function(hand) {return 10 * hand.containsSpecialtyExcluding('Food and Drinks', this.id);},
+        "description": "Creates glowing, energized street food sensation."
+    },
+    {
+        "id": 66,
+        "name": "Neon DJ",
+        "universe": "Archons",
+        "specialty": "Musicians",
+        "fun": -6,
+        "hire": false,
+        "effect1": "Spark: + 30 with any other Archons",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return hand.containsUniverseExcluding('Archons', this.id) ? 30 : 0;},
+        "effect2": "Spark: +30 with any Food and Drinks",
+        "effect2IsHire": false,
+        "effect2IsTrend": false,
+        effect2Score: function(hand) {return hand.containsSpecialty('Food and Drinks') ? 30 : 0;},
+        "description": "Mixes tracks with holographic visuals and pulsing beats."
+    },
+    {
+        "id": 67,
+        "name": "Virtual Arena Master",
+        "universe": "Archons",
+        "specialty": "Games",
+        "fun": 4,
+        "hire": false,
+        "effect1": "Spark: + 50 with Cybernetic Strongman",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return hand.contains('Cybernetic Strongman') ? 50 : 0;},
+        "effect2": "Trend: +30 if Slot Machiner is in another Party",
+        "effect2IsHire": false,
+        "effect2IsTrend": true,
+        effect2Score: function(hand) {return this.effect2IsTrendActive ? 30 : 0;},
+        "description": "Hosts virtual reality challenges and tournament."
+    },
+    {
+        "id": 68,
+        "name": "Cybernetic Strongman",
+        "universe": "Archons",
+        "specialty": "Spectacle",
+        "fun": 5,
+        "hire": false,
+        "effect1": "Spark: +35 with any Musicians",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return hand.containsSpecialty('Musicians') ? 35 : 0;},
+        "effect2": "Spark: +15 for each other Archons",
+        "effect2IsHire": false,
+        "effect2IsTrend": false,
+        effect2Score: function(hand) {return 15 * hand.containsUniverseExcluding('Archons', this.id);},
+        "description": "Shows their strength by bending metal and lifting heavy objects."
+    },
+    {
+        "id": 69,
+        "name": "Nanofabric Stylist",
+        "universe": "Archons",
+        "specialty": "Fashion",
+        "fun": -1,
+        "hire": false,
+        "effect1": "Spark: +30 with any other Fashion",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return hand.containsSpecialtyExcluding('Fashion', this.id) ? 30 : 0;},
+        "effect2": "Spark: +30 with any Games",
+        "effect2IsHire": false,
+        "effect2IsTrend": false,
+        effect2Score: function(hand) {return hand.containsSpecialty('Games') ? 30 : 0;},
+        "description": "Uses nanotechnology to create clothes that can be updated."
+    },
+    {
+        "id": 70,
+        "name": "Sandstone Brewer",
+        "universe": "Golden Reach",
+        "specialty": "Food and Drinks",
+        "fun": 2,
+        "hire": false,
+        "effect1": "Spark: +50 with Desert Dancers",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return hand.contains('Desert Dancers') ? 50 : 0;},
+        "effect2IsHire": false,
+        "effect2IsTrend": false,
+        "description": "Uses unique desert minerals to brew special drinks."
+    },
+    {
+        "id": 71,
+        "name": "Desert Dancers",
+        "universe": "Golden Reach",
+        "specialty": "Performers",
+        "fun": 4,
+        "hire": false,
+        "effect1": "Spark: +30 with any Storytellers",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {return hand.containsSpecialty('Storytellers') ? 30 : 0;},
+        "effect2": "Spark: +15 for each other Golden Reach",
+        "effect2IsHire": false,
+        "effect2IsTrend": false,
+        effect2Score: function(hand) {return 15 * hand.containsUniverseExcluding('Golden Reach', this.id);},
+        "description": "Desert performances, combining traditional steps with energy."
+    },
+    {
+        "id": 72,
+        "name": "The Sultan",
+        "universe": "Golden Reach",
+        "specialty": "Storytellers",
+        "fun": 30,
+        "hire": false,
+        "effect1": "Spark: +70 for 5 High Cards, \n+120 for 6 High Cards, \n+220 for 7 High Cards",
+        "effect1IsHire": false,
+        "effect1IsTrend": false,
+        effect1Score: function(hand) {var highs = 0; for (const card of hand.nonBlankedCards()) {if (card.fun >= 30) {  highs++;} } var bonus = 0; if (highs == 5) {bonus = 70; } else if (highs == 6) {bonus = 120; } else if (highs == 7) {bonus = 220; } return bonus;},
+        "effect2": "High Card: Card with 30 or more Base Fun",
+        "effect2IsHire": false,
+        "effect2IsTrend": false,
+        "description": "Tells stories about the sand empire."
     }
-  ],
+],
   getCardByName: function(cardName) {
     for (const card of this.cards) {
       if (card.name === cardName) {

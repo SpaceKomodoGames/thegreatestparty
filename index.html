@@ -1,10 +1,9 @@
-<html lang="en" manifest="/fantasy-realms/fantasy-realms.appcache">
-
+<html lang="en" manifest="/space-komodo/the-greatest-party.appcache">
 <head>
   <meta charset="utf-8">
-  <title>Fantasy Realms: App of Scoring</title>
-  <meta name="description" content="Fantasy Realms: App of Scoring">
-  <meta name="author" content="Jimmy Praet">
+  <title>The Greatest Party in the Multiverse: Scoring App</title>
+  <meta name="description" content="Scoring app for the game The Greatest Party in the Multiverse">
+  <meta name="author" content="Fajar Nugroho, Jimmy Praet">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="msapplication-TileColor" content="#ffffff">
   <meta name="msapplication-TileImage" content="icons/ms-icon-144x144.png">
@@ -34,77 +33,104 @@
 </head>
 
 <body>
-  <script id="cards-template" type="text/x-handlebars-template">
-    {{#each suits}}
-    <div class="card">
-      <div class="card-header" role="tab" id="{{@key}}Header" data-toggle="collapse" data-parent="#cards" href="#{{@key}}" aria-expanded="false" aria-controls="{{@key}}">
-        <a>{{@key}}</a>
-      </div>
-      <div id="{{@key}}" class="collapse" role="tabpanel" aria-labelledby="{{@key}}Header">
-        <ul class="list-group">
-          {{#each this}}
-          <li class="list-group-item {{suit}}" onclick="addToHand({{id}})"><span class="badge badge-default">{{strength}}</span> {{name}}</li>
-          {{/each}}
-        </ul>
-      </div>
-    </div>
-    {{/each}}
+  <script>
+    Handlebars.registerHelper('sort', function (items, property) {
+      return items.sort((a, b) => {
+        if (a[property] < b[property]) return -1;
+        if (a[property] > b[property]) return 1;
+        return 0;
+      });
+    });
+      
+    Handlebars.registerHelper('isNot', function(value, options) {
+        return !value;
+    });
+      
+    Handlebars.registerHelper('formatPoints', function(points) {
+      if (points >= 0) {
+        return "+" + points;
+      } else {
+        return points.toString();
+      }
+    });
   </script>
-  <script id="suit-selection-template" type="text/x-handlebars-template">
-    {{#each suits}}
-    <div class="card">
-      <div class="card-header suit-selection" onclick="selectSuit('{{this}}')">
-        {{this}}
-      </div>
+
+<script id="cards-template" type="text/x-handlebars-template">
+  {{#each cards}}
+  <div class="card">
+    <div class="card-header" role="tab" id="{{id}}Header" data-parent="#cards" href="#{{id}}" aria-expanded="false" aria-controls="{{id}}" onclick="addToHand('{{id}}')">
+      <a>{{name}}</a>
     </div>
-    {{/each}}
-  </script>
-  <script id="hand-template" type="text/x-handlebars-template">
+    <div id="{{id}}" class="collapse" role="tabpanel" aria-labelledby="{{id}}Header">
+      <ul class="list-group">
+        <li class="list-group-item {{id}}">
+          <span class="badge badge-default">{{fun}}</span> {{name}}
+        </li>
+      </ul>
+    </div>
+  </div>
+  {{/each}}
+</script>
+    
+<script id="hand-template" type="text/x-handlebars-template">
     {{#each cardsInHand}}
     <div id="card-{{id}}" class="card" onclick="selectFromHand({{id}})">
       <ul class="list-group">
-        <li class="list-group-item {{suit}} {{#if blanked}}blanked{{/if}}">
-          <span class="badge badge-default">
-            {{#if blanked}}
-              BLANKED
-            {{else}}
-              {{strength}}
+        <li class="list-group-item Title {{#if blanked}}blanked{{/if}}">
+          <span class="top-score badge badge-default"> {{fun}} </span> 
+          <span class="top-score-name"> &nbsp; {{name}} </span> 
+          <span class="top-right-score float-right points">{{points}}</span>
+            <br>
+            Universe: 
+            <span class="badge badge-default"> {{universe}} </span>
+            Specialty: 
+            <span class="badge badge-default"> {{specialty}} </span>
+        </li>
+        {{#if effect1}}
+        <li class="list-group-item effect1 {{#if blanked}}blanked{{/if}}">
+          {{{effect1}}}
+          {{#if effect1Points}}
+          <span class="right-score float-right effect1"> &nbsp; {{formatPoints effect1Points}}</span>
+          {{/if}}            
+            {{#if card.effect1IsHire}}
+                <span class="hire1">
+                    <button id="card-hire1-{{id}}" type="button" class="btn btn-sm btn-primary float-right">Not Hired</button>
+                </span>
             {{/if}}
-          </span> {{name}}
-          {{#if magic}}
-          *
-          {{/if}}
-          <span class="float-right points">{{points}}</span>
-        </li>
-        {{#if bonus}}
-        <li class="list-group-item bonus {{#if blanked}}blanked{{/if}}">
-          {{{bonus}}}
-          {{#if bonusPoints}}
-          <span class="float-right bonus">+{{bonusPoints}}</span>
-          {{/if}}
+            {{#if card.effect1IsTrend}}
+                <span class="trend1">
+                    <button id="card-trend1-{{id}}" type="button" class="btn btn-sm btn-primary float-right">Not Trending</button>
+                </span>
+            {{/if}}
         </li>
         {{/if}}
-        {{#if penalty}}
-        <li class="list-group-item penalty {{#if blanked}}blanked{{/if}} {{#if penaltyCleared}}cleared{{/if}}">
-          {{{penalty}}}
-          {{#if penaltyPoints}}
-          <span class="float-right penalty">{{penaltyPoints}}</span>
+          
+        {{#if effect2}}
+        <li class="list-group-item effect2 {{#if blanked}}blanked{{/if}}">
+          {{{effect2}}}
+          {{#if effect2Points}}
+          <span class="right-score float-right effect2"> &nbsp; {{formatPoints effect2Points}}</span>
           {{/if}}
+            {{#if card.effect2IsHire}}
+                <span class="hire2">
+                    <button id="card-hire2-{{id}}" type="button" class="btn btn-sm btn-primary float-right">Not Hired</button>
+                </span>
+            {{/if}}
+            {{#if card.effect2IsTrend}}
+                <span class="trend2">
+                    <button id="card-trend2-{{id}}" type="button" class="btn btn-sm btn-primary float-right">Not Trending</button>
+                </span>
+            {{/if}}
         </li>
         {{/if}}
-        {{#if card.action}}
-        <li class="list-group-item bonus">
-            <span id="card-action-text-{{id}}" />
-            <button id="card-action-{{id}}" type="button" class="btn btn-sm btn-primary float-right" onclick="event.stopPropagation(); useCard({{id}});">Use</button>
-        </li>
-        {{/if}}
+          
       </ul>
     </div>
     {{/each}}
-  </script>
+</script>
+    
   <div id="container">
     <div id="header">
-      <img src="img/fantasy-realms.jpg" style="height: 3rem;"></img>
       <div id="header-right">
         <div id="hand-info">
           <span id="cardCount">0</span><span class="separator">/</span><span id="cardLimit">7</span>
@@ -118,17 +144,16 @@
         <div id="cards" class="panel" role="tablist" aria-multiselectable="true"></div>
       </div>
       <div id="right">
-        <div id="hand">
-        </div>
+        <div id="hand"></div>
       </div>
     </div>
   </div>
 </body>
 
 <script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/fantasy-realms/service-worker.js', {scope: '/fantasy-realms/'});
-  }
+//  if ('serviceWorker' in navigator) {
+//    navigator.serviceWorker.register('/the-greatest-party/service-worker.js', {scope: '/the-greatest-party/'});
+//  }
 </script>
 
 </html>

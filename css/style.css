@@ -1,9 +1,9 @@
 html {
-  background-color: #ccc0a8;
+  background-color: #0D1321;
 }
 
 body {
-  background-color: #ccc0a8;
+  background-color: #0D1321;
 }
 
 #container {
@@ -11,11 +11,14 @@ body {
   width: 100%;
   max-width: 60rem;
   height: 100%;
+    
+  margin-left: auto;
+  margin-right: auto;
 }
 
 #header {
   position: fixed;
-  background-color: #6f292b;
+  background-color: #1D2B53;
   height: 4rem;
   padding: 0.5rem;
   width: 100%;
@@ -44,26 +47,42 @@ body {
 }
 
 #points {
-  color: #c3a332;
+  color: #7F5283;
 }
 
 #cardCount, #cardLimit {
-  color: #995153;
+  color: #5A5D9F;
 }
 
 span.separator {
-  color: #995153;
+  color: #5A5D9F;
 }
 
 #left {
-  width: 10rem;
-  background-color: #ccc0a8;
+  width: 13rem;
+  background-color: #0D1321;
 }
 
 #right {
-  background-color: #e9e3c6;
+  background-color: #0B2545;
   min-height: 100%;
-  width: calc(100% - 10rem);
+  width: calc(100% - 13rem);
+}
+
+span.top-right-score {
+  font-size: 2em;
+}
+
+span.top-score-name {
+  font-size: 1.4em;
+}
+
+span.right-score {
+  font-size: 1.3em;
+}
+
+span.top-score {
+  font-size: 1.15em;
 }
 
 li.list-group-item {
@@ -72,107 +91,111 @@ li.list-group-item {
   font-size: 0.9rem;
 }
 
+li.Title {
+  background-color: #292b2c;
+}
+
 li.Land {
-  background-color: #3b1d13;
+  background-color: #3B5284;
 }
 
 span.land {
-  color: #3b1d13;
+  color: #3B5284;
 }
 
 li.Flood {
-  background-color: #41437c;
+  background-color: #292E49;
 }
 
 span.flood {
-  color: #41437c;
+  color: #292E49;
 }
 
 li.Weather {
-  background-color: #a6bced;
+  background-color: #406AB2;
 }
 
 span.weather {
-  color: #a6bced;
+  color: #406AB2;
 }
 
 li.Flame {
-  background-color: #b44347;
+  background-color: #6A4F4B;
 }
 
 span.flame {
-  color: #b44347;
+  color: #6A4F4B;
 }
 
 li.Army {
-  background-color: #312b2f;
+  background-color: #212738;
 }
 
 span.army {
-  color: #312b2f;
+  color: #212738;
 }
 
 li.Wizard {
-  background-color: #e056a3;
+  background-color: #564D80;
 }
 
 span.wizard {
-  color: #e056a3;
+  color: #564D80;
 }
 
 li.Leader {
-  background-color: #7b48a4;
+  background-color: #67597A;
 }
 
 span.leader {
-  color: #7b48a4;
+  color: #67597A;
 }
 
 li.Beast {
-  background-color: #60a35c;
+  background-color: #327855;
 }
 
 span.beast {
-  color: #60a35c;
+  color: #327855;
 }
 
 li.Weapon {
-  background-color: #878586;
+  background-color: #737373;
 }
 
 span.weapon {
-  color: #878586;
+  color: #737373;
 }
 
 li.Artifact {
-  background-color: #d24e37;
+  background-color: #914E39;
 }
 
 span.artifact {
-  color: #d24e37;
+  color: #914E39;
 }
 
 li.Wild {
-  background-color: #c6c2c3;
+  background-color: #808080;
 }
 
 span.wild {
-  color: #c6c2c3;
+  color: #808080;
 }
 
 #cards {
-  background-color: #ccc0a8;
+  background-color: #0D1321;
 }
 
 #cards .card-header, #hand .card-header {
   padding: 0.4rem;
   font-weight: bold;
-  background-color: #ccc0a8;
+  background-color: #9b9dc6;
   cursor: pointer;
 }
 
 #hand {
-  background-color: #e9e3c6;
+  background-color: #0B2545;
   padding: 0.4rem;
   font-weight: bold;
 }
@@ -187,8 +210,8 @@ span.wild {
   padding-right: 0;
 }
 
-#hand li.bonus, #hand li.penalty {
-  background-color: #fffafa;
+#hand li.effect1, #hand li.effect2 {
+  background-color: #FFFFFF;
   color: grey;
   font-weight: normal;
   font-size: 0.8rem;
@@ -230,5 +253,5 @@ button {
 }
 
 #cards div.suit-selection {
-  background-color: #aed77b;
+  background-color: #74A4BC;
 }

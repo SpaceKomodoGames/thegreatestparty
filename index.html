@@ -53,6 +53,67 @@
         return points.toString();
       }
     });
+      
+    Handlebars.registerHelper('parse', function(text) {
+      const specialties = {
+        "Food and Drinks": "s-1.png",
+        "Musicians": "s-2.png",
+        "Performers": "s-3.png",
+        "Games": "s-4.png",
+        "Spectacle": "s-5.png",
+        "Storytellers": "s-6.png",
+        "Fashion": "s-7.png",
+      };
+      const universes = {
+        "Olympians": "u-1.png",
+        "Gearwrights": "u-2.png",
+        "Mystic Grove": "u-3.png",
+        "Interstellar Council": "u-4.png",
+        "Heavenly Empire": "u-5.png",
+        "Atlantis": "u-6.png",
+        "Hexward": "u-7.png",
+        "Nusantara": "u-8.png",
+        "Mesozoic": "u-9.png",
+        "Ghoulhaven": "u-10.png",
+        "Archons": "u-11.png",
+        "Golden Reach": "u-12.png",
+      };
+      const boldTerms = [
+        "Spark:", "Clash:", "Trend:", "Hire:", "Negative Card:", "Negative Cards", "Low Card:", "Low Cards",
+        "High Card:", "High Cards", "Even Cards", "Even Card", "Odd Cards", "Odd Card", "Base Fun",
+        "Obscurity", "Popular", "Money", "Specialty", "Specialties", "Universe", "Universes", "Dionysus",
+        "Apollo", "Nine Muses", "Athena", "Zeus", "Hera", "Aphrodite", "Steam Pipers", "Clockwork Magician",
+        "Slot Machiner", "Steam Automater", "The Queen", "Berry Nectarist", "Forest Ensemble", "Acrobatic Monkeys",
+        "Beastmaster", "Ancient Ent", "Leafweaver", "Cosmic Mixologist", "Space Band", "Galactic Illusionist",
+        "Interplanetary Racer", "Space Dragon Tamers", "Five Elders", "Astro-Armorer", "Celestial Chef",
+        "Dragon Dancers", "Imperial Fireworks", "The Emperor", "Silksmiths", "Seafood Maestro", "Triton",
+        "Poseidon", "Siren Queen", "Elder Turtle", "Seawear Designer", "Spirit Sonata", "Magizoologist",
+        "Broomstick Racer", "Pyrotechnic Professors", "Headmaster", "Magic Wardrober", "Spicemaster",
+        "Pencak Silat", "Pinisi Boat Racer", "Garuda", "Gatotkaca", "Songket Seamstress", "Meatmasters",
+        "Stone Percussion", "Grand Fire", "Jungle Runner", "Beasthuntress", "Bone Armorer", "Crypt Barista",
+        "Bone Orchestra", "Zombie Choreographer", "Poltergeist", "Spectral Legion", "Wraith Lord", "Cyber Food Truck",
+        "Neon DJ", "Virtual Arena Master", "Cybernetic Strongman", "Corporate Mogul", "Nanofabric Stylist",
+        "Sandstone Brewer", "Desert Strings", "Desert Dancers", "Duneworm Riders", "The Sultan", "Turban Tailor"
+      ];
+
+      // Replace universes and specialties with images
+      Object.keys(specialties).forEach(key => {
+        const imgTag = `<img class="inline-img" src="img/${specialties[key]}" alt="${key}" />`;
+        text = text.replace(new RegExp("\\b" + key + "\\b", "g"), imgTag);
+      });
+
+      Object.keys(universes).forEach(key => {
+        const imgTag = `<img class="inline-img" src="img/${universes[key]}" alt="${key}" />`;
+        text = text.replace(new RegExp("\\b" + key + "\\b", "g"), imgTag);
+      });
+
+      // Bold specific terms
+      boldTerms.forEach(term => {
+        text = text.replace(new RegExp("(" + term.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1") + ")", "g"), '<strong>$1</strong>');
+      });
+
+      return new Handlebars.SafeString(text);
+    });
   </script>
 
 <script id="cards-template" type="text/x-handlebars-template">
@@ -81,14 +142,13 @@
           <span class="top-score-name"> &nbsp; {{name}} </span> 
           <span class="top-right-score float-right points">{{points}}</span>
             <br>
-            Universe: 
-            <span class="badge badge-default"> {{universe}} </span>
-            Specialty: 
-            <span class="badge badge-default"> {{specialty}} </span>
+            Universe: {{{parse universe}}}
+            &nbsp; &nbsp; 
+            Specialty: {{{parse specialty}}}
         </li>
         {{#if effect1}}
         <li class="list-group-item effect1 {{#if blanked}}blanked{{/if}}">
-          {{{effect1}}}
+          {{{parse effect1}}}
           {{#if effect1Points}}
           <span class="right-score float-right effect1"> &nbsp; {{formatPoints effect1Points}}</span>
           {{/if}}            
@@ -107,7 +167,7 @@
           
         {{#if effect2}}
         <li class="list-group-item effect2 {{#if blanked}}blanked{{/if}}">
-          {{{effect2}}}
+          {{{parse effect2}}}
           {{#if effect2Points}}
           <span class="right-score float-right effect2"> &nbsp; {{formatPoints effect2Points}}</span>
           {{/if}}
@@ -131,6 +191,9 @@
     
   <div id="container">
     <div id="header">
+      <div id="header-left">
+        <span id="header-title">The Greatest Party in the Multiverse</span>
+      </div>
       <div id="header-right">
         <div id="hand-info">
           <span id="cardCount">0</span><span class="separator">/</span><span id="cardLimit">7</span>

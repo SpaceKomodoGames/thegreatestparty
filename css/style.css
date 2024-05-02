@@ -25,6 +25,9 @@ body {
   max-width: 60rem;
   z-index: 1;
   vertical-align: middle;
+  display: flex;
+  justify-content: space-between;
+  align-items: center; 
 }
 
 #main {
@@ -38,6 +41,12 @@ body {
   height: 100%;
   display: flex;
   align-items: center;
+}
+
+#header-title {
+  font-weight: bold;
+  color: #FFFFFF;
+  font-size: 1.5em;
 }
 
 #hand-info {
@@ -83,6 +92,10 @@ span.right-score {
 
 span.top-score {
   font-size: 1.15em;
+}
+
+img.inline-img {
+    width: 40;
 }
 
 li.list-group-item {

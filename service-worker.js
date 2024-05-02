@@ -1,5 +1,5 @@
 var APP_PREFIX = 'the-greatest-party';
-var VERSION = '0.1';
+var VERSION = '0.1.1';
 var CACHE_NAME = APP_PREFIX + VERSION;
 var URLS = [
   '/the-greatest-party/',
